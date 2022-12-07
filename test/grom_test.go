@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-// TestConn 测试Gorm链接
+// TestConn 测试Gorm链接 go test -run TestConn -v
 func TestConn(t *testing.T) {
 	// 参考 https://github.com/go-sql-driver/mysql#dsn-data-source-name 获取详情
 	dsn := "root:admin123@tcp(192.168.7.114:3306)/fetion?charset=utf8&parseTime=True&loc=Local"
