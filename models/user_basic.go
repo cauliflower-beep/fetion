@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fetion/utils"
+	"fmt"
 	"gorm.io/gorm"
 	"time"
 )
@@ -22,4 +24,14 @@ type UserBasic struct {
 
 func (table *UserBasic) TableName() string {
 	return "t_user_basic"
+}
+
+// GetUserList 获取全部用户
+func GetUserList() []*UserBasic {
+	userList := make([]*UserBasic, 10)
+	utils.DB.Find(&userList)
+	for _, user := range userList {
+		fmt.Println(user.Name)
+	}
+	return userList
 }

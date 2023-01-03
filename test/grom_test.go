@@ -5,6 +5,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"testing"
+	"time"
 )
 
 // TestConn 测试Gorm链接 go test -run TestConn -v
@@ -22,10 +23,14 @@ func TestConn(t *testing.T) {
 	// create
 	user := &models.UserBasic{}
 	user.Name = "lufy"
+	now := time.Now()
+	user.LoginTime = now
+	user.HeartbeatTime = now
+	user.LoginOutTime = now
 	db.Create(user)
 
 	// Read
-	db.First(&user, 1)                  // 根据整型主键查找
+	db.First(&user, 2)                  // 根据整型主键查找
 	db.First(&user, "Name = ?", "lufy") // 查找 Name 字段值为 lufy 的记录
 
 	// Update - 将 user 的 phone 更新为 15706290582
