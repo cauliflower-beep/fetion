@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// UserBasic 用户信息
 type UserBasic struct {
 	gorm.Model
 	Name          string
