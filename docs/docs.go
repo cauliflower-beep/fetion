@@ -16,10 +16,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/getUsers": {
+        "/index": {
             "get": {
                 "tags": [
-                    "获取用户列表"
+                    "首页"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/createUser": {
+            "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "新增用户",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "pwd",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "确认密码",
+                        "name": "rePwd",
+                        "in": "query"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -31,14 +67,75 @@ const docTemplate = `{
                 }
             }
         },
-        "/index": {
+        "/user/deleteUser": {
             "get": {
                 "tags": [
-                    "首页"
+                    "用户模块"
+                ],
+                "summary": "删除用户",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query"
+                    }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/getUsers": {
+            "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "获取用户列表",
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/updateUser": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "更新用户资料",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "pwd",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
                         "schema": {
                             "type": "string"
                         }

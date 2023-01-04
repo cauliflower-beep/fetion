@@ -10,8 +10,8 @@ import (
 // UserBasic 用户信息
 type UserBasic struct {
 	gorm.Model
-	Name          string
-	Pwd           string
+	Name          string `form:"name"`
+	Pwd           string `form:"pwd"`
 	Phone         string
 	Email         string
 	Identity      string // 唯一身份标识
@@ -35,4 +35,23 @@ func GetUserList() []*UserBasic {
 		fmt.Println(user.Name)
 	}
 	return userList
+}
+
+// CreateUser 创建用户
+func CreateUser(user *UserBasic) {
+	utils.DB.Create(user)
+}
+
+// DeleteUser 删除用户
+func DeleteUser(user *UserBasic) {
+	// 软删除 给用户的相关表字段增加了一个删除时间
+	utils.DB.Delete(&user)
+}
+
+// UpdateUser 修改用户资料
+func UpdateUser(user UserBasic) {
+	utils.DB.Model(&user).Updates(UserBasic{
+		Name: user.Name,
+		Pwd:  user.Pwd,
+	})
 }

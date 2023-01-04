@@ -1,15 +1,6 @@
 info:
   contact: {}
 paths:
-  /getUsers:
-    get:
-      responses:
-        "200":
-          description: code","message"}
-          schema:
-            type: string
-      tags:
-      - 获取用户列表
   /index:
     get:
       responses:
@@ -19,4 +10,75 @@ paths:
             type: string
       tags:
       - 首页
+  /user/createUser:
+    get:
+      parameters:
+      - description: 用户名
+        in: query
+        name: name
+        type: string
+      - description: 密码
+        in: query
+        name: pwd
+        type: string
+      - description: 确认密码
+        in: query
+        name: rePwd
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 新增用户
+      tags:
+      - 用户模块
+  /user/deleteUser:
+    get:
+      parameters:
+      - description: id
+        in: query
+        name: id
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 删除用户
+      tags:
+      - 用户模块
+  /user/getUsers:
+    get:
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 获取用户列表
+      tags:
+      - 用户模块
+  /user/updateUser:
+    post:
+      parameters:
+      - description: id
+        in: formData
+        name: id
+        type: string
+      - description: 用户名
+        in: formData
+        name: name
+        type: string
+      - description: 密码
+        in: formData
+        name: pwd
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 更新用户资料
+      tags:
+      - 用户模块
 swagger: "2.0"

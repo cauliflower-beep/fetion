@@ -15,5 +15,5 @@ func main() {
 	utils.InitMysql(_serverConf.DB.Dns)
 
 	r := router.Router()
-	_ = r.Run(":8080") // 默认监听在本机 8080 端口 http://127.0.0.1:8080/index
+	_ = r.Run(":9080") // 默认监听在本机 8080 端口 http://127.0.0.1:8080/index
 }
