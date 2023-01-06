@@ -21,6 +21,7 @@ type UserBasic struct {
 	HeartbeatTime time.Time // 心跳
 	LoginOutTime  time.Time `gorm:"column:login_out_time"` // 退出时间 可以通过gorm标签来指定生成的字段名
 	DeviceInfo    string    // 设备信息
+	Salt          string    // 密码加密盐值
 }
 
 func (table *UserBasic) TableName() string {

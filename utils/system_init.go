@@ -49,7 +49,7 @@ func InitMysql(dns string) {
 		logger.Config{
 			SlowThreshold: time.Second, // 慢查询阈值
 			LogLevel:      logger.Info, // 日志级别
-			Colorful:      true,        // caise
+			Colorful:      true,        // 彩色
 		},
 	)
 	DB, _ = gorm.Open(mysql.Open(dns), &gorm.Config{Logger: newLogger})

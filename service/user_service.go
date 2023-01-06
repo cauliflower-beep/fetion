@@ -2,9 +2,11 @@ package service
 
 import (
 	"fetion/models"
+	"fetion/utils"
 	"fmt"
 	valid "github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
 	"strconv"
 )
@@ -51,7 +53,13 @@ func CreateUser(ctx *gin.Context) {
 	}
 	user := &models.UserBasic{}
 	user.Name = name
-	user.Pwd = pwd
+	/*
+		密码要加密保存
+	*/
+	salt := fmt.Sprintf("%06d", rand.Int31()) // %06d 整数输出 宽度是6位 不足左边补数字0
+	encodePwd := utils.MakeSaltPwd(pwd, salt)
+	user.Pwd = encodePwd
+	user.Salt = salt
 	// 创建用户
 	models.CreateUser(user)
 	ctx.JSON(http.StatusOK, gin.H{
