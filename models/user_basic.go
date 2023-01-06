@@ -12,8 +12,8 @@ type UserBasic struct {
 	gorm.Model
 	Name          string `form:"name"`
 	Pwd           string `form:"pwd"`
-	Phone         string
-	Email         string
+	Phone         string `valid:"matches(^1[3-9]{1}\\d{9}$)"`
+	Email         string `valid:"email"` // govalidator 直接提供了一个email的校验接口
 	Identity      string // 唯一身份标识
 	ClientIp      string
 	ClientPort    string
@@ -37,6 +37,27 @@ func GetUserList() []*UserBasic {
 	return userList
 }
 
+// FindUserByName 通过用户名定位到某个用户
+func FindUserByName(name string) UserBasic {
+	var user UserBasic
+	utils.DB.Where("name = ?", name).First(&user)
+	return user
+}
+
+// FindUserByTel 通过手机号定位到缪个用户
+func FindUserByTel(tel string) UserBasic {
+	var user UserBasic
+	utils.DB.Where("phone = ?", tel).First(user)
+	return user
+}
+
+// FindUserByEmail 通过手机号定位到缪个用户
+func FindUserByEmail(email string) UserBasic {
+	var user UserBasic
+	utils.DB.Where("email = ?", email).First(user)
+	return user
+}
+
 // CreateUser 创建用户
 func CreateUser(user *UserBasic) {
 	utils.DB.Create(user)
@@ -51,7 +72,9 @@ func DeleteUser(user *UserBasic) {
 // UpdateUser 修改用户资料
 func UpdateUser(user UserBasic) {
 	utils.DB.Model(&user).Updates(UserBasic{
-		Name: user.Name,
-		Pwd:  user.Pwd,
+		Name:  user.Name,
+		Pwd:   user.Pwd,
+		Phone: user.Phone,
+		Email: user.Email,
 	})
 }

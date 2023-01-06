@@ -2,6 +2,8 @@ package service
 
 import (
 	"fetion/models"
+	"fmt"
+	valid "github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -29,16 +31,25 @@ func GetUsers(ctx *gin.Context) {
 // @Router /user/createUser [get]
 func CreateUser(ctx *gin.Context) {
 	// 解析URL参数
-	user := &models.UserBasic{}
-	name := ctx.DefaultQuery("name", "忧郁的小黄鹂")
-	pwd := ctx.DefaultQuery("pwd", "test123")     // 密码
-	rePwd := ctx.DefaultQuery("rePwd", "test123") // 确认密码
+	name := ctx.Query("name")
+	// 不允许出现重复的用户名 后续就支持通过用户名登陆
+	rec := models.FindUserByName(name)
+	if rec.ID != 0 { // 可以设置id从1开始
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"msg": "当前用户名已注册!",
+		})
+		return
+	}
+
+	pwd := ctx.Query("pwd")     // 密码
+	rePwd := ctx.Query("rePwd") // 确认密码
 	if pwd != rePwd {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"err": "密码不一致，请重新确认！",
 		})
 		return
 	}
+	user := &models.UserBasic{}
 	user.Name = name
 	user.Pwd = pwd
 	// 创建用户
@@ -73,6 +84,8 @@ func DeleteUser(ctx *gin.Context) {
 // @param id formData string false "id"
 // @param name formData string false "用户名"
 // @param pwd  formData string false "密码"
+// @param phone formData string false "电话号码"
+// @param email  formData string false "邮箱"
 // @Success 200 {string} json{"code","message"}
 // @Router /user/updateUser [post]
 func UpdateUser(ctx *gin.Context) {
@@ -80,10 +93,30 @@ func UpdateUser(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.PostForm("id"))
 	name := ctx.PostForm("name")
 	pwd := ctx.PostForm("pwd")
+	phone := ctx.PostForm("phone")
+	email := ctx.PostForm("email")
+
 	var user models.UserBasic
 	user.ID = uint(id)
 	user.Name = name
 	user.Pwd = pwd
+	user.Phone = phone
+	user.Email = email
+
+	/*
+		邮箱和电话号码的更新需要做校验
+		需要符合规范
+		这里用到了 govalidator 这个包
+	*/
+	_, err := valid.ValidateStruct(user)
+	if err != nil {
+		fmt.Println(err)
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "参数非法,请确认后重试！",
+		})
+		return
+	}
+
 	// 更新用户数据
 	models.UpdateUser(user)
 	ctx.JSON(http.StatusOK, gin.H{

@@ -73,6 +73,14 @@ paths:
         in: formData
         name: pwd
         type: string
+      - description: 电话号码
+        in: formData
+        name: phone
+        type: string
+      - description: 邮箱
+        in: formData
+        name: email
+        type: string
       responses:
         "200":
           description: code","message"}

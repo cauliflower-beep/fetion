@@ -131,6 +131,18 @@ const docTemplate = `{
                         "description": "密码",
                         "name": "pwd",
                         "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "电话号码",
+                        "name": "phone",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "邮箱",
+                        "name": "email",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
