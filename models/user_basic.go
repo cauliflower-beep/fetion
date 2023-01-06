@@ -38,6 +38,30 @@ func GetUserList() []*UserBasic {
 	return userList
 }
 
+// FindUserByNameAndPwd 根据用户名和密码找到用户 后期可以提供 电话号码&邮箱之类的校验方式
+func FindUserByNameAndPwd(name, pwd string) (UserBasic, string) {
+	// 状态控制
+	msg := ""
+	// 根据用户名找到salt
+	user := FindUserByName(name)
+	if user.ID == 0 {
+		msg = "用户不存在！"
+		return user, msg
+	}
+	// 将登录密码加密之后，与库中密码做对比
+	isPwdRight := utils.ValidSaltPwd(pwd, user.Salt, user.Pwd)
+	if !isPwdRight {
+		/*
+			后续还可以扩充校验次数 间隔时间之类的
+		*/
+		msg = "密码与当前用户不符！" // 安全性期间不要告诉他用户名和密码哪个不对
+		return UserBasic{}, msg
+	} else {
+		msg = "密码核验通过"
+		return user, msg
+	}
+}
+
 // FindUserByName 通过用户名定位到某个用户
 func FindUserByName(name string) UserBasic {
 	var user UserBasic

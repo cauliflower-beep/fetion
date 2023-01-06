@@ -91,6 +91,36 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/getUserByNameAndPwd": {
+            "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "根据用户名和密码获取用户",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "密码",
+                        "name": "pwd",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/getUsers": {
             "get": {
                 "tags": [

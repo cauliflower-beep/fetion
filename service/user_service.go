@@ -23,6 +23,29 @@ func GetUsers(ctx *gin.Context) {
 	})
 }
 
+// GetUserByNameAndPwd
+// @Summary 根据用户名和密码获取用户
+// @Tags 用户模块
+// @param name query string false "用户名"
+// @param pwd  query string false "密码"
+// @Success 200 {string} json{"code","message"}
+// @Router /user/getUserByNameAndPwd [get]
+func GetUserByNameAndPwd(ctx *gin.Context) {
+	name := ctx.Query("name")
+	pwd := ctx.Query("pwd")
+	user, msg := models.FindUserByNameAndPwd(name, pwd)
+	if user.ID == 0 {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"msg": msg,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"msg":  msg,
+		"user": user,
+	})
+}
+
 // CreateUser
 // @Summary 新增用户
 // @Tags 用户模块
