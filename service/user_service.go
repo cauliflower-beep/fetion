@@ -19,7 +19,8 @@ import (
 func GetUsers(ctx *gin.Context) {
 	users := models.GetUserList()
 	ctx.JSON(http.StatusOK, gin.H{
-		"name": users,
+		"code": 0,
+		"data": users,
 	})
 }
 
@@ -29,20 +30,22 @@ func GetUsers(ctx *gin.Context) {
 // @param name query string false "用户名"
 // @param pwd  query string false "密码"
 // @Success 200 {string} json{"code","message"}
-// @Router /user/getUserByNameAndPwd [get]
+// @Router /user/getUserByNameAndPwd [post]
 func GetUserByNameAndPwd(ctx *gin.Context) {
 	name := ctx.Query("name")
 	pwd := ctx.Query("pwd")
 	user, msg := models.FindUserByNameAndPwd(name, pwd)
 	if user.ID == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"msg": msg,
+			"code": -1, // 0-成功 -1-失败
+			"msg":  msg,
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
+		"code": 0,
 		"msg":  msg,
-		"user": user,
+		"data": user,
 	})
 }
 
@@ -61,7 +64,8 @@ func CreateUser(ctx *gin.Context) {
 	rec := models.FindUserByName(name)
 	if rec.ID != 0 { // 可以设置id从1开始
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"msg": "当前用户名已注册!",
+			"code": -1,
+			"msg":  "当前用户名已注册!",
 		})
 		return
 	}
@@ -70,7 +74,8 @@ func CreateUser(ctx *gin.Context) {
 	rePwd := ctx.Query("rePwd") // 确认密码
 	if pwd != rePwd {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"err": "密码不一致，请重新确认！",
+			"code": -1,
+			"err":  "密码不一致，请重新确认！",
 		})
 		return
 	}
@@ -86,6 +91,7 @@ func CreateUser(ctx *gin.Context) {
 	// 创建用户
 	models.CreateUser(user)
 	ctx.JSON(http.StatusOK, gin.H{
+		"code":    0,
 		"message": "用户创建成功",
 	})
 }
@@ -105,6 +111,7 @@ func DeleteUser(ctx *gin.Context) {
 	// 删除用户
 	models.DeleteUser(user)
 	ctx.JSON(http.StatusOK, gin.H{
+		"code":    0,
 		"message": "用户删除成功",
 	})
 }
@@ -143,6 +150,7 @@ func UpdateUser(ctx *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
+			"code":  -1,
 			"error": "参数非法,请确认后重试！",
 		})
 		return
@@ -151,6 +159,7 @@ func UpdateUser(ctx *gin.Context) {
 	// 更新用户数据
 	models.UpdateUser(user)
 	ctx.JSON(http.StatusOK, gin.H{
+		"code":    0,
 		"message": "用户数据更新成功",
 	})
 }
