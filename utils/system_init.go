@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"context"
+	"fmt"
+	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -13,7 +16,11 @@ import (
 // Instance 定义成全局变量 方便后续调用
 var Instance *Config
 
-var DB *gorm.DB
+var (
+	ctx = context.Background()
+	DB  *gorm.DB
+	RDB *redis.Client
+)
 
 type Config struct {
 	// 数据库配置
@@ -22,6 +29,15 @@ type Config struct {
 		MaxIdleConns int    `yaml:"MaxIdleConns"`
 		MaxOpenConns int    `yaml:"MaxOpenConns"`
 	} `yaml:"DB"`
+
+	// redis配置
+	redis struct {
+		Addr        string `yaml:"addr"`
+		Pwd         string `yaml:"pwd"`
+		DB          int    `yaml:"db"`
+		PoolSize    int    `yaml:"poolSize"`
+		MinIdleConn int    `yaml:"minIdleConn"`
+	}
 }
 
 // InitConfig 配置初始化
@@ -53,4 +69,18 @@ func InitMysql(dns string) {
 		},
 	)
 	DB, _ = gorm.Open(mysql.Open(dns), &gorm.Config{Logger: newLogger})
+}
+
+// InitRedis 初始化redis连接
+func InitRedis(conf *Config) {
+	RDB = redis.NewClient(&redis.Options{
+		Addr:         conf.redis.Addr,
+		Password:     conf.redis.Pwd,
+		DB:           conf.redis.DB,
+		PoolSize:     conf.redis.PoolSize,
+		MinIdleConns: conf.redis.MinIdleConn,
+	})
+	// 测试是否链接成功
+	pong, err := RDB.Ping(ctx).Result()
+	fmt.Println(pong, err)
 }

@@ -12,3 +12,10 @@ DB:
   MaxIdleConns: 50
   MaxOpenConns: 200
 
+# redis
+redis:
+  addr: localhost:6379
+  pwd: "" # no pwd set
+  db: 0 # use default DB
+  poolSize: 30
+  minIdleConn: 30
