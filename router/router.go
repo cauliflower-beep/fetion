@@ -19,5 +19,7 @@ func Router() *gin.Engine {
 	r.GET("/user/createUser", service.CreateUser)
 	r.GET("/user/deleteUser", service.DeleteUser)
 	r.POST("/user/updateUser", service.UpdateUser)
+	// 消息相关
+	r.GET("msg/sendMsg", service.SendMsg) // Get 因为页面上只对应一个按钮
 	return r
 }

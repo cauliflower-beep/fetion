@@ -84,3 +84,23 @@ func InitRedis(conf *Config) {
 	pong, err := RDB.Ping(ctx).Result()
 	fmt.Println(pong, err)
 }
+
+const (
+	PublishKey = "websocket" // 管道名
+)
+
+// Publish 发布消息到Redis
+func Publish(ctx context.Context, channel string, msg string) error {
+	var err error
+	fmt.Println("{Publish.msg}|", msg)
+	err = RDB.Publish(ctx, channel, msg).Err()
+	return err
+}
+
+// Subscribe 订阅Redis消息
+func Subscribe(ctx context.Context, channel string) (string, error) {
+	sub := RDB.Subscribe(ctx, channel)
+	fmt.Println("{subscribe}|", sub)
+	msg, err := sub.ReceiveMessage(ctx)
+	return msg.Payload, err
+}
