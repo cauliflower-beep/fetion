@@ -10,6 +10,7 @@ import (
 // UserBasic 用户信息
 type UserBasic struct {
 	gorm.Model
+	Uid           int64
 	Name          string `form:"name"`
 	Pwd           string `form:"pwd"`
 	Phone         string `valid:"matches(^1[3-9]{1}\\d{9}$)"`

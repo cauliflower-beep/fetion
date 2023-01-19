@@ -6,7 +6,7 @@ import "gorm.io/gorm"
 type GroupBasic struct {
 	gorm.Model
 	Name     string // 群名
-	LeaderId uint   // 群主
+	LeaderId int64  // 群主
 	Icon     string // 群头像
 	Level    string // 群等级
 	Desc     string // 描述

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fetion/models"
 	"fetion/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -46,7 +47,10 @@ func SendMsg(ctx *gin.Context) {
 }
 
 func MsgHandler(ws *websocket.Conn, ctx *gin.Context) {
-	msg, err := utils.Subscribe(ctx, utils.PublishKey)
+	_, data, err := ws.ReadMessage()
+	err = utils.Publish(ctx, utils.PublishKey, string(data))
+	msg := string(data)
+	//msg, err := utils.Subscribe(ctx, utils.PublishKey)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -57,4 +61,8 @@ func MsgHandler(ws *websocket.Conn, ctx *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func SendPrivateMsg(ctx *gin.Context) {
+	models.Chat(ctx)
 }
