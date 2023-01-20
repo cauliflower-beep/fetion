@@ -12,5 +12,5 @@ func TestGetUserList(t *testing.T) {
 	dsn := "root:admin123@tcp(127.0.0.1:3306)/fetion?charset=utf8&parseTime=True&loc=Local"
 	utils.InitMysql(dsn)
 
-	models.GetUserList()
+	models.GetUsersList()
 }

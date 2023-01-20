@@ -17,7 +17,7 @@ import (
 // @Success 200 {string} json{"code","message"}
 // @Router /user/getUsers [get]
 func GetUsers(ctx *gin.Context) {
-	users := models.GetUserList()
+	users := models.GetUsersList()
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 0,
 		"data": users,
@@ -61,8 +61,8 @@ func CreateUser(ctx *gin.Context) {
 	// 解析URL参数
 	name := ctx.Query("name")
 	// 不允许出现重复的用户名 后续就支持通过用户名登陆
-	rec := models.FindUserByName(name)
-	if rec.ID != 0 { // 可以设置id从1开始
+	_, ok := models.FindUserByName(name)
+	if ok != 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": -1,
 			"msg":  "当前用户名已注册!",

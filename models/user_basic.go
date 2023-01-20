@@ -29,13 +29,12 @@ func (table *UserBasic) TableName() string {
 	return "t_user_basic"
 }
 
-// GetUserList 获取全部用户
-func GetUserList() []*UserBasic {
+// GetUsersList 获取全部用户
+func GetUsersList() []*UserBasic {
 	userList := make([]*UserBasic, 10)
-	utils.DB.Find(&userList)
-	for _, user := range userList {
-		fmt.Println(user.Name)
-	}
+	res := utils.DB.Find(&userList)
+	// 打印找到的记录数
+	fmt.Printf("{当前注册用户共有%d位}", res.RowsAffected)
 	return userList
 }
 
@@ -44,8 +43,8 @@ func FindUserByNameAndPwd(name, pwd string) (UserBasic, string) {
 	// 状态控制
 	msg := ""
 	// 根据用户名找到salt
-	user := FindUserByName(name)
-	if user.ID == 0 { // 要求用户表id不从0开始
+	user, ok := FindUserByName(name)
+	if ok == 0 { // 查询结果为空
 		msg = "用户不存在！"
 		return user, msg
 	}
@@ -95,10 +94,10 @@ func FindUserByNameAndPwd(name, pwd string) (UserBasic, string) {
 }
 
 // FindUserByName 通过用户名定位到某个用户
-func FindUserByName(name string) UserBasic {
+func FindUserByName(name string) (UserBasic, int64) {
 	var user UserBasic
-	utils.DB.Where("name = ?", name).First(&user)
-	return user
+	res := utils.DB.Where("name = ?", name).First(&user)
+	return user, res.RowsAffected
 }
 
 // FindUserByTel 通过手机号定位到缪个用户

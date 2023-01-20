@@ -25,5 +25,5 @@ func main() {
 	utils.InitRedis(_serverConf)
 
 	r := router.Router()
-	_ = r.Run(":9080") // 默认监听在本机 8080 端口 http://127.0.0.1:8080/index
+	_ = r.Run(":9080") // 默认监听在本机 9080 端口 http://127.0.0.1:9080/index
 }
