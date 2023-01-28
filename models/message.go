@@ -187,8 +187,9 @@ func dispatch(data []byte) {
 
 // sendPrivateMsg 发送私聊消息
 func sendPrivateMsg(from int64, msg []byte) {
-	cmLocker.Lock()
+	cmLocker.RLock()
 	node, ok := clientMap[from]
+	cmLocker.RUnlock()
 	if ok {
 		node.DataQueue <- msg
 	}

@@ -32,8 +32,8 @@ func GetUsers(ctx *gin.Context) {
 // @Success 200 {string} json{"code","message"}
 // @Router /user/getUserByNameAndPwd [post]
 func GetUserByNameAndPwd(ctx *gin.Context) {
-	name := ctx.Query("name")
-	pwd := ctx.Query("pwd")
+	name := ctx.PostForm("mobile")
+	pwd := ctx.PostForm("passwd")
 	user, msg := models.FindUserByNameAndPwd(name, pwd)
 	if user.ID == 0 {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -59,7 +59,14 @@ func GetUserByNameAndPwd(ctx *gin.Context) {
 // @Router /user/createUser [get]
 func CreateUser(ctx *gin.Context) {
 	// 解析URL参数
-	name := ctx.Query("name")
+	name := ctx.PostForm("name")
+	// 用户名不能为空
+	if name == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"code": -1,
+			"msg":  "用户名不能为空！",
+		})
+	}
 	// 不允许出现重复的用户名 后续就支持通过用户名登陆
 	_, ok := models.FindUserByName(name)
 	if ok != 0 {
@@ -70,8 +77,15 @@ func CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	pwd := ctx.Query("pwd")     // 密码
-	rePwd := ctx.Query("rePwd") // 确认密码
+	pwd := ctx.PostForm("password") // 密码
+	// 密码不能为空
+	if pwd == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"code": -1,
+			"msg":  "密码不能为空！",
+		})
+	}
+	rePwd := ctx.PostForm("Identity") // 确认密码
 	if pwd != rePwd {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"code": -1,
