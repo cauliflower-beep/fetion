@@ -33,6 +33,7 @@ func Router() *gin.Engine {
 	// 首页
 	r.GET("/index", service.GetIndex)
 	r.GET("/register", service.Register)
+	r.GET("/toChat", service.ToChat)
 	// 用户相关
 	r.POST("/user/getUsers", service.GetUsers)
 	r.POST("/user/getUserByNameAndPwd", service.GetUserByNameAndPwd)
